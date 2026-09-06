@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CBSE Class XII CS - Computer Networks KBC Hot-Seat Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-radial-1: #070b19;
+      --bg-radial-2: #02040a;
+      --gold-primary: #f5b027;
+      --gold-light: #ffd768;
+      --gold-dark: #8c5b05;
+      --blue-frame: #1b3569;
+      --blue-frame-light: #3258a3;
+      --panel-bg: rgba(10, 18, 41, 0.88);
+      --correct-green: #00d26a;
+      --correct-glow: rgba(0, 210, 106, 0.4);
+      --wrong-red: #f8312f;
+      --wrong-glow: rgba(248, 49, 47, 0.4);
+      --text-main: #f0f4fc;
+      --text-muted: #8fa0c9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at 50% 30%, #15224e 0%, var(--bg-radial-1) 50%, var(--bg-radial-2) 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow-x: hidden;
+      padding: 12px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 720px;
+      height: 720px;
+      background: radial-gradient(circle, rgba(245, 176, 39, 0.08) 0%, rgba(27, 53, 105, 0.15) 50%, transparent 70%);
+      border-radius: 50%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: linear-gradient(180deg, rgba(20, 36, 77, 0.9) 0%, rgba(9, 17, 38, 0.9) 100%);
+      border: 2px solid var(--gold-primary);
+      border-radius: 14px;
+      padding: 14px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(245, 176, 39, 0.25), inset 0 0 10px rgba(245, 176, 39, 0.15);
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.35rem;
+      letter-spacing: 2px;
+      color: var(--gold-light);
+      text-shadow: 0 0 8px rgba(255, 215, 104, 0.6);
+    }
+
+    .logo-badge span {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+    }
+
+    .kbc-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stat-pill {
+      background: rgba(4, 9, 23, 0.85);
+      border: 1px solid var(--blue-frame-light);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-pill .val {
+      color: var(--gold-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .lifelines {
+      display: flex;
+      gap: 10px;
+    }
+
+    .kbc-btn {
+      background: linear-gradient(180deg, #1f3b79 0%, #0d1a3a 100%);
+      color: var(--gold-light);
+      border: 1.5px solid var(--gold-primary);
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .kbc-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 14px rgba(245, 176, 39, 0.5);
+      background: linear-gradient(180deg, #2b50a3 0%, #152754 100%);
+    }
+
+    .kbc-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: #555;
+      color: #777;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(14, 25, 53, 0.8);
+      border: 1px solid var(--blue-frame);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary), var(--gold-light));
+      width: 0%;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px var(--gold-primary);
+    }
+
+    .stage {
+      background: var(--panel-bg);
+      border: 2px solid var(--blue-frame-light);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(27, 53, 105, 0.4);
+    }
+
+    .q-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(143, 160, 201, 0.15);
+      padding-bottom: 8px;
+    }
+
+    .q-number {
+      font-family: 'Cinzel', serif;
+      color: var(--gold-primary);
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+    }
+
+    .q-topic {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .question-box {
+      background: linear-gradient(180deg, rgba(20, 36, 75, 0.9) 0%, rgba(9, 18, 41, 0.95) 100%);
+      border: 2px solid var(--gold-primary);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 22px;
+      font-size: 1.06rem;
+      line-height: 1.6;
+      font-weight: 500;
+      box-shadow: 0 0 15px rgba(245, 176, 39, 0.2);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+      .kbc-stats {
+        gap: 8px;
+      }
+      .stat-pill {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+    }
+
+    .option-card {
+      background: linear-gradient(90deg, #101c3d 0%, #172a5a 50%, #101c3d 100%);
+      border: 1.5px solid var(--blue-frame-light);
+      border-radius: 35px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      user-select: none;
+      min-height: 58px;
+    }
+
+    .option-card:hover:not(.locked):not(.eliminated) {
+      border-color: var(--gold-primary);
+      background: linear-gradient(90deg, #1c326b 0%, #26458f 50%, #1c326b 100%);
+      transform: scale(1.015);
+      box-shadow: 0 0 15px rgba(245, 176, 39, 0.3);
+    }
+
+    .opt-badge {
+      width: 32px;
+      height: 32px;
+      background: radial-gradient(circle, var(--gold-light) 0%, var(--gold-dark) 100%);
+      color: #050b18;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(245, 176, 39, 0.4);
+    }
+
+    .opt-text {
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: #e2eafc;
+      flex-grow: 1;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .option-card.selected {
+      border-color: var(--gold-light);
+      background: linear-gradient(90deg, #855b08 0%, #d49315 50%, #855b08 100%);
+      box-shadow: 0 0 18px rgba(245, 176, 39, 0.7);
+    }
+
+    .option-card.correct {
+      border-color: #00ff80 !important;
+      background: linear-gradient(90deg, #034b27 0%, #088347 50%, #034b27 100%) !important;
+      box-shadow: 0 0 20px var(--correct-glow) !important;
+      animation: pulseCorrect 1s infinite alternate;
+    }
+
+    .option-card.wrong {
+      border-color: #ff4a47 !important;
+      background: linear-gradient(90deg, #570f0f 0%, #991e1e 50%, #570f0f 100%) !important;
+      box-shadow: 0 0 20px var(--wrong-glow) !important;
+    }
+
+    .option-card.eliminated {
+      opacity: 0.18;
+      pointer-events: none;
+      filter: grayscale(1);
+    }
+
+    @keyframes pulseCorrect {
+      0% { box-shadow: 0 0 10px var(--correct-glow); }
+      100% { box-shadow: 0 0 25px rgba(0, 255, 128, 0.8); }
+    }
+
+    .explanation-panel {
+      margin-top: 18px;
+      background: rgba(4, 9, 24, 0.95);
+      border: 1.5px solid var(--blue-frame);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .explanation-panel.active {
+      display: block;
+    }
+
+    .exp-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .exp-title.correct-title { color: var(--correct-green); }
+    .exp-title.wrong-title { color: var(--wrong-red); }
+    .exp-title.skipped-title { color: var(--gold-primary); }
+
+    .exp-body {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #b7c8ed;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-nav {
+      background: linear-gradient(180deg, #1b3569 0%, #0c1c3f 100%);
+      border: 1.5px solid var(--blue-frame-light);
+      color: #fff;
+      padding: 9px 20px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 10px rgba(245, 176, 39, 0.4);
+      background: linear-gradient(180deg, #254b94 0%, #12285a 100%);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .btn-submit {
+      background: linear-gradient(180deg, #c78810 0%, #754b00 100%);
+      border: 1.5px solid var(--gold-light);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      background: linear-gradient(180deg, #f5aa1a 0%, #9e6500 100%);
+      box-shadow: 0 0 18px rgba(255, 215, 104, 0.6);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(2, 4, 10, 0.85);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: linear-gradient(180deg, #101e40 0%, #060c1d 100%);
+      border: 2px solid var(--gold-primary);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      padding: 24px;
+      box-shadow: 0 0 30px rgba(245, 176, 39, 0.4);
+    }
+
+    .modal-header {
+      font-family: 'Cinzel', serif;
+      color: var(--gold-light);
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-content {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #d1dcfa;
+      margin-bottom: 20px;
+    }
+
+    #analytics-screen {
+      display: none;
+      background: var(--panel-bg);
+      border: 2px solid var(--gold-primary);
+      border-radius: 18px;
+      padding: 30px 24px;
+      box-shadow: 0 0 30px rgba(245, 176, 39, 0.3);
+    }
+
+    .results-hero {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .results-hero h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      color: var(--gold-light);
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+
+    .results-hero p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: rgba(5, 11, 26, 0.9);
+      border: 1.5px solid var(--blue-frame-light);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .kpi-card .kpi-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .kpi-card .kpi-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .kpi-score { color: var(--gold-primary); }
+    .kpi-right { color: var(--correct-green); }
+    .kpi-wrong { color: var(--wrong-red); }
+    .kpi-skipped { color: #8fa0c9; }
+    .kpi-accuracy { color: #00d2d2; }
+
+    .review-section {
+      margin-top: 24px;
+    }
+
+    .review-section h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      color: var(--gold-primary);
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--blue-frame-light);
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .tab-btn.active {
+      background: var(--gold-primary);
+      color: #050b18;
+      font-weight: 600;
+      border-color: var(--gold-light);
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+      gap: 8px;
+      margin-bottom: 24px;
+      max-height: 230px;
+      overflow-y: auto;
+      padding: 6px;
+      background: rgba(2, 5, 15, 0.7);
+      border-radius: 10px;
+      border: 1px solid var(--blue-frame);
+    }
+
+    .review-dot {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: 'JetBrains Mono', monospace;
+      border: 1px solid transparent;
+    }
+
+    .review-dot.correct { background: rgba(0, 210, 106, 0.2); color: #00ff80; border-color: var(--correct-green); }
+    .review-dot.wrong { background: rgba(248, 49, 47, 0.2); color: #ff605e; border-color: var(--wrong-red); }
+    .review-dot.skipped { background: rgba(143, 160, 201, 0.15); color: #8fa0c9; border-color: #536999; }
+    .review-dot:hover { transform: scale(1.1); }
+
+    .question-detail-modal {
+      background: #070e24;
+      border: 1.5px solid var(--blue-frame-light);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="logo-badge">
+        <div style="font-size: 1.8rem; color: var(--gold-primary);">🌐</div>
+        <div>
+          <h1>MAHAPARIKSHA XII</h1>
+          <span>CBSE COMPUTER NETWORKS (UNIT 2)</span>
+        </div>
+      </div>
+      <div class="kbc-stats">
+        <div class="stat-pill">
+          <span>Q:</span>
+          <span class="val" id="top-q-index">1/70</span>
+        </div>
+        <div class="stat-pill">
+          <span>PTS:</span>
+          <span class="val" id="top-points">0</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="quiz-screen">
+      <div class="toolbar">
+        <div class="lifelines">
+          <button class="kbc-btn" id="btn-5050" onclick="use5050()">
+            <span>⚡ 50:50 Lifeline</span>
+          </button>
+          <button class="kbc-btn" id="btn-hint" onclick="openHintModal()">
+            <span>💡 Teacher's Hint</span>
+          </button>
+        </div>
+        <div style="font-size: 0.78rem; color: var(--gold-light); font-weight: 500;">
+          Class XII CS Curriculum 2026-2027 • Board Standard
+        </div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+
+      <div class="stage">
+        <div class="q-meta">
+          <div class="q-number" id="q-number-text">QUESTION 1 of 70</div>
+          <div class="q-topic" id="q-topic-text">Topic: Evolution of Networking</div>
+        </div>
+
+        <div class="question-box" id="question-text">
+          Loading Question...
+        </div>
+
+        <div class="options-grid" id="options-container"></div>
+
+        <div class="explanation-panel" id="exp-panel">
+          <div class="exp-title" id="exp-title"></div>
+          <div class="exp-body" id="exp-content"></div>
+        </div>
+
+        <div class="controls">
+          <div class="nav-group">
+            <button class="btn-nav" id="btn-back" onclick="navigateQuestion(-1)">
+              ← Previous
+            </button>
+            <button class="btn-nav" id="btn-skip" onclick="skipQuestion()">
+              Skip Question ↷
+            </button>
+          </div>
+          <div class="nav-group">
+            <button class="btn-nav btn-submit" id="btn-lock" onclick="lockAnswer()">
+              Lock Answer 🔒
+            </button>
+            <button class="btn-nav" id="btn-next" onclick="navigateQuestion(1)">
+              Next Question →
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="analytics-screen">
+      <div class="results-hero">
+        <h2>KBC NETWORKING MASTERY REPORT</h2>
+        <p>CBSE Class XII Computer Science Unit 2 Diagnostic Summary</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Final Score</div>
+          <div class="kpi-val kpi-score" id="res-score">0 / 70</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Correct</div>
+          <div class="kpi-val kpi-right" id="res-correct">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Incorrect</div>
+          <div class="kpi-val kpi-wrong" id="res-wrong">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Skipped</div>
+          <div class="kpi-val kpi-skipped" id="res-skipped">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Accuracy</div>
+          <div class="kpi-val kpi-accuracy" id="res-accuracy">0%</div>
+        </div>
+      </div>
+
+      <div class="review-section">
+        <h3>
+          <span>Detailed Response Grid</span>
+          <div class="filter-tabs">
+            <button class="tab-btn active" onclick="filterReview('all', this)">All (70)</button>
+            <button class="tab-btn" onclick="filterReview('correct', this)">Correct</button>
+            <button class="tab-btn" onclick="filterReview('wrong', this)">Wrong</button>
+            <button class="tab-btn" onclick="filterReview('skipped', this)">Skipped</button>
+          </div>
+        </h3>
+
+        <div class="review-grid" id="review-dots-container"></div>
+
+        <div class="question-detail-modal" id="review-detail-box" style="display: none;">
+          <div style="color: var(--gold-primary); font-weight: 700; margin-bottom: 6px;" id="rev-q-num"></div>
+          <div style="font-size: 0.95rem; margin-bottom: 10px;" id="rev-q-text"></div>
+          <div style="font-size: 0.85rem; line-height: 1.6; color: #b0c2e8;" id="rev-q-details"></div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 28px;">
+        <button class="btn-nav btn-submit" onclick="restartQuiz()" style="padding: 12px 30px; font-size: 1rem;">
+          🔄 Retake Quiz & Practice Again
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="hint-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span>💡 CBSE Expert Teacher's Hint</span>
+        </div>
+        <div class="modal-content" id="hint-modal-text">
+          Remember network fundamentals and protocol functions.
+        </div>
+        <div style="text-align: right;">
+          <button class="btn-nav btn-submit" onclick="closeHintModal()">Got it!</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Strictly based on CBSE Class XII Computer Science (Unit 2: Computer Networks) • Transmission Media, Devices, Topologies, Protocols & Web Services
+    </footer>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        topic: "Evolution of Networking",
+        q: "What was the name of the world's first packet-switching network funded by the US Department of Defense in 1969?",
+        options: ["NSFNET", "ARPANET", "INTERNET", "INTRANET"],
+        ans: 1,
+        hint: "It stands for Advanced Research Projects Agency Network.",
+        exp: "<b>ARPANET</b> (Advanced Research Projects Agency Network) was created in 1969 by the US DoD and is celebrated as the precursor to the modern Internet."
+      },
+      {
+        id: 2,
+        topic: "Evolution of Networking",
+        q: "In the evolution of the Internet, what was the primary mandate of NSFNET in the mid-1980s?",
+        options: [
+          "Commercial video streaming",
+          "Connecting high-capacity supercomputer centers for academic research",
+          "Providing social media messaging",
+          "Military satellite monitoring exclusively"
+        ],
+        ans: 1,
+        hint: "National Science Foundation created this network to link academic researchers with supercomputing facilities.",
+        exp: "<b>Connecting supercomputing centers for academic research</b>. NSFNET served as an academic backbone network that dramatically accelerated the growth of interconnected networks."
+      },
+      {
+        id: 3,
+        topic: "Components of Data Communication",
+        q: "Which fundamental component of a communication system defines the agreed-upon set of rules governing transmission?",
+        options: ["Communication Media", "Protocol", "Receiver", "Message"],
+        ans: 1,
+        hint: "Without this component, two connected devices may exchange signals but cannot understand each other.",
+        exp: "A <b>Protocol</b> is a formal set of rules and conventions that determine how data is structured, transmitted, and received across a network."
+      },
+      {
+        id: 4,
+        topic: "Capacity of Communication Media",
+        q: "What term denotes the width of an allocated frequency band, or the maximum amount of data that can pass over a channel in a given time?",
+        options: ["Baud Rate", "Latency", "Bandwidth", "Attenuation"],
+        ans: 2,
+        hint: "It is measured in Hertz (Hz) for analog frequencies or bits per second (bps) for digital data.",
+        exp: "<b>Bandwidth</b> refers to the range of frequencies within a given band or the data-carrying capacity of a transmission medium."
+      },
+      {
+        id: 5,
+        topic: "Capacity of Communication Media",
+        q: "Which of the following units represents the transfer of 1,000,000,000 bits per second?",
+        options: ["1 Kbps", "1 Mbps", "1 Gbps", "1 Tbps"],
+        ans: 2,
+        hint: "Kilo = 10^3, Mega = 10^6, Giga = 10^9.",
+        exp: "<b>1 Gbps</b> (Gigabits per second) represents 10^9 (1 billion) bits transferred per second."
+      },
+      {
+        id: 6,
+        topic: "IP Addressing",
+        q: "How many bits are used in an IPv4 address and how are they conventionally represented for human reading?",
+        options: [
+          "32 bits represented in 4 decimal numbers separated by dots",
+          "64 bits represented in 8 octets separated by hyphens",
+          "128 bits represented in hexadecimal separated by colons",
+          "16 bits represented in binary chunks"
+        ],
+        ans: 0,
+        hint: "Example: 192.168.1.1 has 4 octets.",
+        exp: "An <b>IPv4 address</b> is 32 bits long, divided into four 8-bit octets separated by dots (e.g., 172.16.254.1), each ranging from 0 to 255."
+      },
+      {
+        id: 7,
+        topic: "IP Addressing",
+        q: "Which of the following is an INVALID IPv4 address?",
+        options: ["192.168.0.1", "10.255.255.0", "172.316.10.5", "127.0.0.1"],
+        ans: 2,
+        hint: "Each of the 4 octets in an IPv4 address cannot exceed 255.",
+        exp: "<b>172.316.10.5</b> is invalid because 316 exceeds the maximum permitted byte value of 255 (2^8 - 1)."
+      },
+      {
+        id: 8,
+        topic: "Switching Techniques",
+        q: "Which switching technique establishes a dedicated, unbroken physical path between the sender and receiver before transmission starts?",
+        options: ["Packet Switching", "Message Switching", "Circuit Switching", "Cell Relay"],
+        ans: 2,
+        hint: "Traditional landline telephone systems rely on this method.",
+        exp: "<b>Circuit Switching</b> creates a dedicated end-to-end physical circuit before data transfer begins. No other traffic can share that circuit while reserved."
+      },
+      {
+        id: 9,
+        topic: "Switching Techniques",
+        q: "Why is Packet Switching considered superior to Circuit Switching for computer data communications?",
+        options: [
+          "Packets are sent over analog copper only",
+          "It uses physical relays exclusively",
+          "It dynamically shares transmission links among multiple conversations, maximizing channel utilization",
+          "It reserves the entire line for one single user indefinitely"
+        ],
+        ans: 2,
+        hint: "Data is split into small pieces that travel along different paths depending on current congestion.",
+        exp: "<b>Dynamic line sharing</b>. Packet switching breaks messages into discrete packets that share bandwidth dynamically, providing high efficiency and fault tolerance."
+      },
+      {
+        id: 10,
+        topic: "Wired Transmission Media",
+        q: "In Twisted Pair cable, why are the insulated copper conductors twisted in pairs along their length?",
+        options: [
+          "To increase electrical resistance",
+          "To reduce electromagnetic interference (EMI) and cross-talk",
+          "To make the cable flexible enough to bend 180 degrees",
+          "To increase the overall physical weight"
+        ],
+        ans: 1,
+        hint: "The twists cause opposing magnetic fields to cancel out noise from neighboring pairs.",
+        exp: "Twisting pairs reduces <b>cross-talk and electromagnetic interference</b> from external noise and adjacent wire pairs."
+      },
+      {
+        id: 11,
+        topic: "Wired Transmission Media",
+        q: "Which guided media contains a central solid copper core surrounded by an insulating layer, metallic braided shield, and an outer plastic jacket?",
+        options: ["Unshielded Twisted Pair", "Fiber Optic Cable", "Coaxial Cable", "Ribbon Cable"],
+        ans: 2,
+        hint: "Commonly used for cable television (CATV) distribution.",
+        exp: "<b>Coaxial Cable</b> features a central conductor, dielectric insulator, woven braided metallic mesh shield, and an outer protective jacket."
+      },
+      {
+        id: 12,
+        topic: "Wired Transmission Media",
+        q: "What physical principle allows optical fibers to transmit data as light pulses across glass cores with negligible attenuation?",
+        options: ["Refraction", "Total Internal Reflection", "Polarization", "Diffraction"],
+        ans: 1,
+        hint: "Light strikes the cladding interface at an angle greater than the critical angle.",
+        exp: "<b>Total Internal Reflection</b> (TIR) traps light inside the higher refractive index core as it bounces down the cable with extremely low signal degradation."
+      },
+      {
+        id: 13,
+        topic: "Wired Transmission Media",
+        q: "Which transmission medium is completely immune to electrical noise, lightning surges, and electromagnetic interference (EMI)?",
+        options: ["UTP Category 6", "Coaxial Thicknet", "Fiber Optic Cable", "Shielded Twisted Pair"],
+        ans: 2,
+        hint: "Light pulses traveling through glass do not conduct electrical currents.",
+        exp: "<b>Fiber Optic Cable</b> uses glass/plastic fibers to transmit photons rather than electrical currents, rendering it completely immune to EMI and RF interference."
+      },
+      {
+        id: 14,
+        topic: "Wireless Transmission Media",
+        q: "Which type of electromagnetic wave is omnidirectional and travels easily through walls, making it ideal for FM radio and cellular networks?",
+        options: ["Infrared waves", "Radio waves", "Laser beam", "Ultraviolet rays"],
+        ans: 1,
+        hint: "These waves span frequencies from 3 kHz up to 1 GHz and can propagate in all directions.",
+        exp: "<b>Radio waves</b> are omnidirectional; they propagate across wide areas and pass through physical obstacles like building walls."
+      },
+      {
+        id: 15,
+        topic: "Wireless Transmission Media",
+        q: "Which wireless medium requires strict 'Line of Sight' (LoS) alignment between parabolic dish antennas?",
+        options: ["Infrared", "Radio Waves", "Microwaves", "Bluetooth"],
+        ans: 2,
+        hint: "Curvature of the Earth requires relay towers spaced roughly 40-50 km apart for these directional waves.",
+        exp: "<b>Microwaves</b> are unidirectional and require clear, unobstructed Line of Sight (LoS) between transmitter and receiver antennas."
+      },
+      {
+        id: 16,
+        topic: "Wireless Transmission Media",
+        q: "A TV remote control operates primarily on which wireless transmission medium?",
+        options: ["Microwave", "Radio waves", "Infrared waves", "Satellite transmission"],
+        ans: 2,
+        hint: "These high-frequency waves cannot penetrate opaque walls, restricting use to a single room.",
+        exp: "<b>Infrared waves</b> are used for short-range communication (e.g., remotes). They cannot penetrate solid walls, preventing interference with neighboring devices."
+      },
+      {
+        id: 17,
+        topic: "Network Devices: Modem",
+        q: "What is the primary function of a MODEM in data communications?",
+        options: [
+          "Filtering MAC addresses",
+          "Modulation (Digital to Analog) and Demodulation (Analog to Digital)",
+          "Re-routing IP packets along optimal paths",
+          "Assigning domain names to web servers"
+        ],
+        ans: 1,
+        hint: "The name itself is an acronym: MOdulator / DEModulator.",
+        exp: "A <b>Modem</b> converts outgoing digital data from a computer into analog signals (Modulation) and incoming analog signals into digital pulses (Demodulation)."
+      },
+      {
+        id: 18,
+        topic: "Network Devices: Ethernet Card / NIC",
+        q: "What permanent physical identifier is factory-burned into every Network Interface Card (NIC)?",
+        options: ["IP Address", "MAC Address", "Port Address", "Domain Name"],
+        ans: 1,
+        hint: "A 48-bit (6-byte) hexadecimal address uniquely identifying hardware.",
+        exp: "The <b>MAC Address</b> (Media Access Control) is a unique, permanent 48-bit physical hardware identifier burned into the NIC by its manufacturer."
+      },
+      {
+        id: 19,
+        topic: "Network Devices: RJ45",
+        q: "What is an RJ45 connector primarily used for in computer networking?",
+        options: [
+          "Terminating telephone lines with 2 pairs of wires",
+          "Terminating 8-pin twisted pair cables in Ethernet local area networks",
+          "Connecting optical fiber to audio receivers",
+          "Powering wireless access points directly from AC wall sockets"
+        ],
+        ans: 1,
+        hint: "Registered Jack 45 has 8 pins and clicks into an Ethernet port.",
+        exp: "<b>RJ45</b> (Registered Jack-45) is an 8-pin modular connector standard used to terminate UTP/STP cables for Ethernet networks."
+      },
+      {
+        id: 20,
+        topic: "Network Devices: Repeater",
+        q: "At which layer does a Repeater operate, and what is its sole operational objective?",
+        options: [
+          "Translates protocol headers between dissimilar architectures",
+          "Amplifies/regenerates weakened signals to overcome attenuation over long cable lengths",
+          "Filters data packets based on IP destination addresses",
+          "Stores user web caches locally"
+        ],
+        ans: 1,
+        hint: "It regenerates incoming bits at the physical level before signal degradation causes packet loss.",
+        exp: "A <b>Repeater</b> regenerates and cleans electrical/optical signals degraded by attenuation, enabling signals to travel longer distances safely."
+      },
+      {
+        id: 21,
+        topic: "Network Devices: Hub vs Switch",
+        q: "Why is a Switch termed an 'intelligent device' whereas a basic Hub is termed a 'dumb device'?",
+        options: [
+          "A switch amplifies analog signals; a hub cannot",
+          "A hub unicasts to the destination; a switch always broadcasts to all ports",
+          "A switch inspects incoming MAC addresses and forwards frames only to the designated port; a hub broadcasts to all ports",
+          "A switch works without power supplies"
+        ],
+        ans: 2,
+        hint: "A switch maintains an internal CAM/MAC address table to eliminate unnecessary traffic.",
+        exp: "A <b>Switch</b> learns connected MAC addresses and directs data frames strictly to the destination port (unicast), whereas a <b>Hub</b> broadcasts incoming data to every connected port."
+      },
+      {
+        id: 22,
+        topic: "Network Devices: Router",
+        q: "Which network device examines logical IP addresses to forward data packets along the most efficient route between separate networks?",
+        options: ["Hub", "Repeater", "Router", "Modem"],
+        ans: 2,
+        hint: "This device operates at the Network layer and bridges distinct network subnets.",
+        exp: "A <b>Router</b> interconnects disparate networks, inspects IP headers, and uses routing tables and protocols to determine optimal packet delivery paths."
+      },
+      {
+        id: 23,
+        topic: "Network Devices: Gateway",
+        q: "Which device acts as a protocol converter enabling communication between networks with entirely different protocol architectures?",
+        options: ["Bridge", "Gateway", "Repeater", "Passive Hub"],
+        ans: 1,
+        hint: "Think of it as a multilingual translator at the boundary of two dissimilar network environments.",
+        exp: "A <b>Gateway</b> connects networks running differing protocol suites, translating headers and payloads across communication boundaries."
+      },
+      {
+        id: 24,
+        topic: "Network Devices: Wi-Fi Card",
+        q: "What is the primary role of an internal or USB Wi-Fi card attached to a computer?",
+        options: [
+          "Generates digital audio signals",
+          "Transmits and receives radio waves to establish wireless local area network connectivity",
+          "Regulates electrical voltage to motherboard chips",
+          "Provides high-resolution display rendering"
+        ],
+        ans: 1,
+        hint: "It allows a PC to connect to an 802.11 wireless Access Point without cables.",
+        exp: "A <b>Wi-Fi card</b> contains a radio transceiver and antenna allowing computers to communicate wirelessly with a wireless access point/router."
+      },
+      {
+        id: 25,
+        topic: "Network Types: Scale",
+        q: "Connecting a smartphone to a wireless earphone or smartwatch via Bluetooth forms what classification of network?",
+        options: ["LAN", "PAN", "MAN", "WAN"],
+        ans: 1,
+        hint: "This network extends within an immediate radius of roughly 10 meters around an individual.",
+        exp: "A <b>PAN</b> (Personal Area Network) connects personal consumer devices centered around an individual, typically within a 10-meter range."
+      },
+      {
+        id: 26,
+        topic: "Network Types: Scale",
+        q: "A network connecting computer laboratories and offices situated inside a single school campus is classified as:",
+        options: ["WAN", "MAN", "LAN", "PAN"],
+        ans: 2,
+        hint: "Covers a localized geographical boundary like a room, building, or campus.",
+        exp: "A <b>LAN</b> (Local Area Network) covers small geographic footprints such as an office, building, school, or home."
+      },
+      {
+        id: 27,
+        topic: "Network Types: Scale",
+        q: "Cable television networks or municipal municipal-connectivity systems spanning an entire city are examples of:",
+        options: ["PAN", "LAN", "MAN", "CAN"],
+        ans: 2,
+        hint: "Its geographic coverage is larger than a LAN but smaller than a countrywide WAN.",
+        exp: "A <b>MAN</b> (Metropolitan Area Network) spans a town or city, connecting multiple LANs across a municipal district."
+      },
+      {
+        id: 28,
+        topic: "Network Types: Scale",
+        q: "The Internet itself is the largest existing real-world example of which network classification?",
+        options: ["LAN", "MAN", "PAN", "WAN"],
+        ans: 3,
+        hint: "It connects continents, countries, and global infrastructure.",
+        exp: "A <b>WAN</b> (Wide Area Network) spans vast geographical territories like countries or continents, often using satellite and submarine cable backbones."
+      },
+      {
+        id: 29,
+        topic: "Network Topologies: Bus",
+        q: "In a Bus topology, what critical hardware component must be installed at both physical ends of the central backbone cable?",
+        options: ["Hub", "Terminator", "Gateway", "Amplifier"],
+        ans: 1,
+        hint: "Prevents transmitted electrical signals from bouncing back and creating collision echoes.",
+        exp: "<b>Terminators</b> are attached to both ends of the main backbone cable in Bus topology to absorb signals and prevent reflections that corrupt data."
+      },
+      {
+        id: 30,
+        topic: "Network Topologies: Bus Vulnerability",
+        q: "What happens to a Bus topology network if the central backbone cable is severed?",
+        options: [
+          "Only the first host stops communicating",
+          "The entire network fails and all communication halts",
+          "The network automatically reconfigures into a Ring topology",
+          "Communication speed doubles"
+        ],
+        ans: 1,
+        hint: "The backbone cable is a single point of failure for all connected nodes.",
+        exp: "A fault or break in the central backbone cable stops all signal propagation, <b>bringing down the entire network</b>."
+      },
+      {
+        id: 31,
+        topic: "Network Topologies: Star",
+        q: "Which network topology connects every individual workstation through a dedicated cable directly to a central hub or switch?",
+        options: ["Tree Topology", "Mesh Topology", "Star Topology", "Bus Topology"],
+        ans: 2,
+        hint: "Looks like a star with rays radiating outwards from the center.",
+        exp: "In a <b>Star Topology</b>, every host connects directly to a central controller (Hub/Switch). A failure in one node cable does not affect other nodes."
+      },
+      {
+        id: 32,
+        topic: "Network Topologies: Tree",
+        q: "Tree topology is conceptually formed by combining the structural features of which two topologies?",
+        options: [
+          "Ring and Mesh",
+          "Bus and Star",
+          "Star and Ring",
+          "Bus and Point-to-Point"
+        ],
+        ans: 1,
+        hint: "Multiple star networks are attached along a central bus backbone cable.",
+        exp: "<b>Tree Topology</b> (hierarchical topology) combines <b>Bus and Star</b> topologies, using a central backbone cable to link multiple star-configured subnets."
+      },
+      {
+        id: 33,
+        topic: "Network Topologies: Fault Isolation",
+        q: "Which topology offers the simplest fault isolation, where disconnecting a faulty computer causes zero downtime for all other nodes?",
+        options: ["Bus Topology", "Star Topology", "Ring Topology", "Linear Topology"],
+        ans: 1,
+        hint: "Each node uses an independent point-to-point drop cable connecting to the central switch.",
+        exp: "In <b>Star Topology</b>, each station has an isolated point-to-point connection to the central switch, making fault detection and isolation straightforward."
+      },
+      {
+        id: 34,
+        topic: "Network Protocols: HTTP vs HTTPS",
+        q: "What is the key technological enhancement that distinguishes HTTPS from standard HTTP?",
+        options: [
+          "HTTPS uses UDP packets for faster image display",
+          "HTTPS encrypts communication using SSL/TLS protocols to safeguard sensitive data",
+          "HTTPS can only be accessed on desktop computers",
+          "HTTPS eliminates the need for DNS servers"
+        ],
+        ans: 1,
+        hint: "The 'S' stands for Secure, indicating cryptographic encryption.",
+        exp: "<b>HTTPS</b> (HyperText Transfer Protocol Secure) layers encryption (SSL/TLS) over HTTP to protect login credentials and financial transactions from interception."
+      },
+      {
+        id: 35,
+        topic: "Network Protocols: FTP",
+        q: "Which protocol is specially architected for reliable uploading, downloading, and transferring of computer files between a client and server?",
+        options: ["SMTP", "FTP", "POP3", "TELNET"],
+        ans: 1,
+        hint: "The acronym contains 'File Transfer'.",
+        exp: "<b>FTP</b> (File Transfer Protocol) uses TCP to upload and download files between a client and remote server."
+      },
+      {
+        id: 36,
+        topic: "Network Protocols: Email Transport (SMTP)",
+        q: "Which protocol is universally responsible for sending and pushing outgoing email messages between mail servers across the Internet?",
+        options: ["POP3", "IMAP", "SMTP", "HTTP"],
+        ans: 2,
+        hint: "Simple Mail Transfer Protocol handles outbound transmission.",
+        exp: "<b>SMTP</b> (Simple Mail Transfer Protocol) is a push protocol designed for sending and routing outgoing emails across mail servers."
+      },
+      {
+        id: 37,
+        topic: "Network Protocols: Email Retrieval (POP3)",
+        q: "What is the primary operational role of the Post Office Protocol (POP3)?",
+        options: [
+          "Encrypting web browser links",
+          "Retrieving/downloading incoming email messages from a remote mail server to a local client",
+          "Assigning IP addresses to home computers dynamically",
+          "Resolving website hostnames to IP addresses"
+        ],
+        ans: 1,
+        hint: "Clients connect, fetch new emails, download them locally, and typically remove them from the remote server mailbox.",
+        exp: "<b>POP3</b> (Post Office Protocol version 3) connects to an email server to retrieve and download unread mail to the client's local machine."
+      },
+      {
+        id: 38,
+        topic: "Network Protocols: TCP/IP Responsibilities",
+        q: "In the TCP/IP protocol suite, what is the distinct responsibility assigned to TCP?",
+        options: [
+          "Physical modulation of telephone signals",
+          "Breaking data into packets at source, sequencing, tracking delivery, and reassembling at destination",
+          "Specifying geographical locations of routers",
+          "Writing hypertext markup codes"
+        ],
+        ans: 1,
+        hint: "Transmission Control Protocol guarantees reliable, ordered byte-stream delivery.",
+        exp: "<b>TCP</b> breaks messages into ordered packets, tracks acknowledgments, handles retransmissions if packets drop, and reassembles them at the destination."
+      },
+      {
+        id: 39,
+        topic: "Network Protocols: IP Responsibilities",
+        q: "In the TCP/IP protocol suite, what is the core responsibility of the Internet Protocol (IP)?",
+        options: [
+          "Checking file spellings and formatting tables",
+          "Addressing individual packets and routing them across networks to their destination",
+          "Converting audio signals into voice calls",
+          "Compressing video streams"
+        ],
+        ans: 1,
+        hint: "It handles logical addressing and packet routing across intermediate hops.",
+        exp: "<b>IP</b> handles logical packet addressing and routes individual packets from source host to destination host across interconnected networks."
+      },
+      {
+        id: 40,
+        topic: "Network Protocols: PPP",
+        q: "Which data link layer protocol is commonly used to establish a direct point-to-point connection between two communicating nodes over a dial-up or leased line?",
+        options: ["PPP", "SMTP", "TELNET", "VoIP"],
+        ans: 0,
+        hint: "Point-to-Point Protocol.",
+        exp: "<b>PPP</b> (Point-to-Point Protocol) is a data link layer communication protocol used to connect two network nodes directly (e.g., PC to ISP router)."
+      },
+      {
+        id: 41,
+        topic: "Network Protocols: TELNET",
+        q: "What capability does the TELNET protocol provide to a network administrator?",
+        options: [
+          "Streaming interactive video lessons",
+          "Remotely logging into and issuing text command-line instructions on another computer host",
+          "Generating audio phone calls over telephone lines",
+          "Formatting XML databases"
+        ],
+        ans: 1,
+        hint: "Terminal Network protocol allows bi-directional interactive text communications over a virtual terminal.",
+        exp: "<b>TELNET</b> allows users to establish an interactive remote terminal session, executing commands on a remote computer as if sitting in front of it."
+      },
+      {
+        id: 42,
+        topic: "Network Protocols: VoIP",
+        q: "Which protocol technology enables real-time voice telephone calls and voice messaging over broadband Internet networks instead of traditional PSTN telephone wires?",
+        options: ["VoIP", "SMTP", "PPP", "FTP"],
+        ans: 0,
+        hint: "Voice over Internet Protocol.",
+        exp: "<b>VoIP</b> (Voice over Internet Protocol) converts analog voice signals into digital packets and routes them across IP networks, powering services like WhatsApp calls and Skype."
+      },
+      {
+        id: 43,
+        topic: "Web Services: WWW Origin",
+        q: "Who invented the World Wide Web (WWW) in 1989 while working at CERN?",
+        options: ["Charles Babbage", "Tim Berners-Lee", "Alan Turing", "Vint Cerf"],
+        ans: 1,
+        hint: "He formulated HTML, HTTP, and the first browser/web server specifications.",
+        exp: "<b>Tim Berners-Lee</b> invented the World Wide Web in 1989, designing HTML, URI/URL schemes, and the HyperText Transfer Protocol (HTTP)."
+      },
+      {
+        id: 44,
+        topic: "Web Services: HTML vs XML",
+        q: "What is the primary difference in purpose between HTML and XML?",
+        options: [
+          "HTML stores binary files; XML plays audio files",
+          "HTML is designed to display data and define web layout, whereas XML is designed to describe, store, and transport data",
+          "HTML tags are user-defined; XML has strictly fixed predefined tags",
+          "XML is obsolete and replaced by FTP"
+        ],
+        ans: 1,
+        hint: "HTML focuses on how data looks; XML focuses on what the data actually is.",
+        exp: "<b>HTML displays data</b> using predefined presentation tags, while <b>XML stores and transports data</b> using custom, user-defined semantic tags."
+      },
+      {
+        id: 45,
+        topic: "Web Services: XML Characteristics",
+        q: "Which statement regarding Extensible Markup Language (XML) is TRUE?",
+        options: [
+          "XML tags are case-insensitive",
+          "XML allows authors to create their own custom tags",
+          "Closing tags are optional in XML",
+          "XML documents do not require a single root element"
+        ],
+        ans: 1,
+        hint: "XML is extensible because developers invent tags tailored to their domain needs.",
+        exp: "XML allows authors to define <b>custom tags</b>. XML is strictly case-sensitive and mandates proper closing tags and a single root element."
+      },
+      {
+        id: 46,
+        topic: "Web Services: Domain Name System (DNS)",
+        q: "What is the fundamental responsibility of the Domain Name System (DNS)?",
+        options: [
+          "Encrypting user passwords during login",
+          "Translating human-friendly domain names (e.g., cbse.gov.in) into machine-readable numerical IP addresses",
+          "Scanning local hard drives for malware",
+          "Calculating total data transfer speed"
+        ],
+        ans: 1,
+        hint: "It functions like an address book / phone directory for the World Wide Web.",
+        exp: "<b>DNS</b> translates alphabetical, human-readable domain names into the numerical IP addresses computers require to locate servers."
+      },
+      {
+        id: 47,
+        topic: "Web Services: URL Decomposition",
+        q: "In the URL: 'https://www.cbse.gov.in/cbsenew/contact.html', which segment corresponds to the protocol?",
+        options: ["www.cbse.gov.in", "https", "cbsenew", "contact.html"],
+        ans: 1,
+        hint: "It precedes the '://' separator at the beginning of the web address.",
+        exp: "In the provided URL, <b>https</b> is the transfer protocol, <code>www.cbse.gov.in</code> is the domain name, and <code>contact.html</code> is the file path."
+      },
+      {
+        id: 48,
+        topic: "Web Services: URL Decomposition",
+        q: "What does the top-level domain (TLD) extension '.edu' signify in a domain name?",
+        options: [
+          "Commercial enterprise",
+          "Educational institution",
+          "Government agency",
+          "Military installation"
+        ],
+        ans: 1,
+        hint: "Used by universities, colleges, and academic boards.",
+        exp: "The <b>.edu</b> generic top-level domain is reserved for educational institutions, just as .gov is for government entities and .org is for non-profit organizations."
+      },
+      {
+        id: 49,
+        topic: "Web Services: Website",
+        q: "A website is formally defined as:",
+        options: [
+          "A computer application used to write Python programs",
+          "A collection of interconnected, publicly accessible web pages hosted under a single domain name",
+          "A specialized physical cable linking two cities",
+          "A hardware switch inside an office"
+        ],
+        ans: 1,
+        hint: "A web presence made of multiple related web pages served from a common domain.",
+        exp: "A <b>Website</b> is a structured collection of related, interlinked web pages, images, and digital assets accessed under a single shared domain name."
+      },
+      {
+        id: 50,
+        topic: "Web Services: Web Browser",
+        q: "Which of the following software applications is classified as a Web Browser?",
+        options: ["Apache", "Mozilla Firefox", "MySQL", "Ubuntu"],
+        ans: 1,
+        hint: "A client application used to retrieve, render, and display web pages.",
+        exp: "<b>Mozilla Firefox</b> is a web browser (client application). Apache is a web server, MySQL is an RDBMS, and Ubuntu is an operating system."
+      },
+      {
+        id: 51,
+        topic: "Web Services: Web Server",
+        q: "What is a Web Server in computer terminology?",
+        options: [
+          "A cable terminating telephone connections",
+          "A computer program (or dedicated hardware) that accepts HTTP/HTTPS requests from clients and serves back web pages",
+          "A browser extension used to block advertisements",
+          "An electronic device converting digital data to radio waves"
+        ],
+        ans: 1,
+        hint: "Popular examples include Apache HTTP Server, Nginx, and Microsoft IIS.",
+        exp: "A <b>Web Server</b> is software/hardware that listens for incoming client requests via HTTP/HTTPS, fetches requested documents, and serves them to browsers."
+      },
+      {
+        id: 52,
+        topic: "Web Services: Web Hosting",
+        q: "What does the term 'Web Hosting' refer to?",
+        options: [
+          "Typing HTML tags into a text editor",
+          "A service providing storage space, server infrastructure, and network connectivity so a website is accessible on the Internet",
+          "Purchasing a keyboard and monitor for home use",
+          "Creating user accounts in an operating system"
+        ],
+        ans: 1,
+        hint: "Renting server space and bandwidth from an Internet hosting provider.",
+        exp: "<b>Web Hosting</b> is an online service that allocates server space, files storage, and bandwidth so web pages are live and publicly accessible on the WWW."
+      },
+      {
+        id: 53,
+        topic: "Network Architecture: Client-Server",
+        q: "In a Client-Server network model, what role does the 'Client' play?",
+        options: [
+          "Stores centralized databases permanently",
+          "Initiates requests for services, data, or files from the central server",
+          "Regulates electrical current through cables",
+          "Decides global routing policies across autonomous backbones"
+        ],
+        ans: 1,
+        hint: "The workstation or browser that requests web pages or database queries.",
+        exp: "A <b>Client</b> is a node that requests services, resources, or files from a centralized host called a server."
+      },
+      {
+        id: 54,
+        topic: "Transmission Impairments: Attenuation",
+        q: "What networking term describes the loss of signal strength and energy as an electrical or optical signal travels through a physical medium?",
+        options: ["Jitter", "Attenuation", "Distortion", "Cross-talk"],
+        ans: 1,
+        hint: "Repeaters are installed specifically to counteract this physical phenomenon.",
+        exp: "<b>Attenuation</b> is the progressive weakening of a signal's amplitude as it travels over distances through copper, fiber, or air."
+      },
+      {
+        id: 55,
+        topic: "MAC Address Representation",
+        q: "Which of the following represents a valid MAC address format?",
+        options: [
+          "192.168.1.254",
+          "00:1A:2B:3C:4D:5E",
+          "256.0.0.1",
+          "G8-H9-J1-K2-L3-M4"
+        ],
+        ans: 1,
+        hint: "Consists of 6 pairs of hexadecimal digits (0-9, A-F) separated by colons or hyphens.",
+        exp: "<b>00:1A:2B:3C:4D:5E</b> is valid. It contains 12 hexadecimal characters (6 bytes / 48 bits) separated by colons."
+      },
+      {
+        id: 56,
+        topic: "Switching Techniques: Packets",
+        q: "What happens to individual packets of a single message in a Packet-Switched network?",
+        options: [
+          "They must follow the exact same route one behind the other",
+          "They can travel independently through different network paths and be reassembled in correct order at the destination",
+          "They are broadcast over television antennas",
+          "They are destroyed if any single router along the path has traffic"
+        ],
+        ans: 1,
+        hint: "Each packet contains header information (destination IP and sequence number).",
+        exp: "Packets contain destination and sequence details, allowing routers to forward them <b>independently along dynamic paths</b> before reassembly."
+      },
+      {
+        id: 57,
+        topic: "Network Layout: Server Placement",
+        q: "According to CBSE 80-20 networking design guidelines, in which building/wing should the server ideally be located?",
+        options: [
+          "In the building with the smallest number of computers",
+          "In the building with the maximum number of computers",
+          "Always in the security guard gatehouse",
+          "Outside in a waterproof cabinet between all wings"
+        ],
+        ans: 1,
+        hint: "Minimizes internal network traffic and cable congestion according to standard CBSE case studies.",
+        exp: "The server should be installed in the wing/building hosting the <b>maximum number of computers</b> to minimize overall network cable transit and local latency."
+      },
+      {
+        id: 58,
+        topic: "Network Layout: Cable Length & Repeater Rule",
+        q: "In CBSE board network layout problems, when is installing a Repeater typically recommended between two campus buildings?",
+        options: [
+          "When the distance between buildings exceeds 70-100 meters",
+          "When the distance is less than 10 meters",
+          "Only if the buildings have different colors",
+          "Repeaters are only allowed in satellite uplinks"
+        ],
+        ans: 0,
+        hint: "Signal attenuation on standard twisted pair Ethernet cables becomes significant beyond ~100 meters.",
+        exp: "Standard UTP Ethernet signals degrade significantly beyond ~100 meters. A <b>Repeater is suggested when the distance exceeds 70-100 meters</b>."
+      },
+      {
+        id: 59,
+        topic: "Network Layout: Hub/Switch Placement",
+        q: "In a campus network design problem, where should Hubs/Switches be deployed?",
+        options: [
+          "Only in the server room",
+          "Inside each individual building/block to connect all internal computers into a local star network",
+          "Mounted only at the main entrance gate",
+          "Only inside underground cable trenches"
+        ],
+        ans: 1,
+        hint: "Every building housing multiple PCs needs a distribution switch to connect them locally.",
+        exp: "A <b>Hub or Switch must be installed in each wing/building</b> to link its local computers into an internal LAN."
+      },
+      {
+        id: 60,
+        topic: "Network Layout: Inter-Wing Media Selection",
+        q: "Which guided media should be chosen to connect two university campus blocks situated 1.5 km apart requiring maximum data speeds?",
+        options: ["Coaxial Cable", "Fiber Optic Cable", "UTP Cable", "Telephone wire"],
+        ans: 1,
+        hint: "Offers the highest bandwidth and lowest attenuation over kilometer distances.",
+        exp: "<b>Fiber Optic Cable</b> is ideal for connecting buildings over long campus distances (1-2 km) because it provides high speeds and low attenuation."
+      },
+      {
+        id: 61,
+        topic: "Network Layout: Hilly / Terrestrial Barriers",
+        q: "Which wireless medium is best suited to connect two school branches located 15 km apart across hilly terrain where laying underground cables is cost-prohibitive?",
+        options: ["Infrared", "Radio waves / Microwave towers", "Bluetooth", "Fiber Optic"],
+        ans: 1,
+        hint: "Terrestrial dishes mounted on elevated towers traverse rugged, hilly geographical terrain.",
+        exp: "<b>Radio waves or line-of-sight Microwave transmission</b> (or satellite) is ideal for long-distance connectivity across hilly terrain where cable trenches are impractical."
+      },
+      {
+        id: 62,
+        topic: "Data Communication: Communication Media",
+        q: "Communication media can be broadly categorized into:",
+        options: [
+          "Wired (Guided) and Wireless (Unguided) media",
+          "Internal and External processors",
+          "Mechanical and Hydraulic media",
+          "Local and Peripheral media"
+        ],
+        ans: 0,
+        hint: "Physical cables guide waves, whereas air/space leaves waves unguided.",
+        exp: "Transmission media are divided into <b>Guided (Wired)</b> (e.g., twisted pair, coax, fiber) and <b>Unguided (Wireless)</b> (e.g., radio, micro, infrared)."
+      },
+      {
+        id: 63,
+        topic: "Data Transfer Units",
+        q: "Arrange the data transfer rate units in ascending order: (1) Mbps, (2) Tbps, (3) Kbps, (4) Gbps",
+        options: [
+          "3 -> 1 -> 4 -> 2",
+          "1 -> 2 -> 3 -> 4",
+          "3 -> 4 -> 1 -> 2",
+          "2 -> 4 -> 1 -> 3"
+        ],
+        ans: 0,
+        hint: "Kilo < Mega < Giga < Tera.",
+        exp: "The correct ascending order is <b>Kbps (10^3) -> Mbps (10^6) -> Gbps (10^9) -> Tbps (10^12)</b>."
+      },
+      {
+        id: 64,
+        topic: "Network Protocols: Port Numbers",
+        q: "By standard convention, what well-known TCP port number is utilized by unencrypted HTTP web traffic?",
+        options: ["Port 21", "Port 25", "Port 80", "Port 443"],
+        ans: 2,
+        hint: "Port 21 is FTP, 25 is SMTP, 443 is HTTPS.",
+        exp: "<b>Port 80</b> is the standard port for HTTP. Port 443 is HTTPS, Port 21 is FTP, and Port 25 is SMTP."
+      },
+      {
+        id: 65,
+        topic: "Web Services: Static vs Dynamic Pages",
+        q: "What characterizes a Dynamic Web Page compared to a Static Web Page?",
+        options: [
+          "Dynamic pages never change their text content",
+          "Dynamic pages generate customized content on-the-fly in response to user requests or database queries",
+          "Dynamic pages do not use HTML or CSS",
+          "Dynamic pages can only be viewed in text-only terminals"
+        ],
+        ans: 1,
+        hint: "Static pages return the exact same HTML file to all visitors; dynamic pages query databases at runtime.",
+        exp: "A <b>Dynamic web page</b> displays customized content generated in real-time by server-side scripts based on user interactions or database queries."
+      },
+      {
+        id: 66,
+        topic: "Network Protocols: POP3 vs IMAP",
+        q: "Unlike POP3, what key advantage does IMAP provide for email management?",
+        options: [
+          "IMAP prints emails automatically on attached printers",
+          "IMAP syncs emails across multiple devices while keeping them stored on the mail server",
+          "IMAP does not require an Internet connection",
+          "IMAP encrypts video attachments into audio"
+        ],
+        ans: 1,
+        hint: "Internet Message Access Protocol allows you to manage folders seamlessly from both your phone and laptop.",
+        exp: "<b>IMAP synchronizes emails directly on the mail server</b>, allowing changes (read, delete, organize) to reflect across all connected devices."
+      },
+      {
+        id: 67,
+        topic: "Network Devices: Bridge",
+        q: "What is the primary role of a Network Bridge?",
+        options: [
+          "To join two similar LAN segments and filter traffic based on MAC addresses",
+          "To amplify analog voice over long distances",
+          "To host website domain names",
+          "To convert fiber optic cables into coaxial cables"
+        ],
+        ans: 0,
+        hint: "It divides a large local area network into smaller collision domains.",
+        exp: "A <b>Bridge</b> links two distinct segments of the same local network, inspecting MAC addresses to filter and prevent unnecessary packet forwarding."
+      },
+      {
+        id: 68,
+        topic: "Web Services: Cookies",
+        q: "What is a Browser Cookie?",
+        options: [
+          "A malicious Trojan that corrupts BIOS chips",
+          "A small text file saved by a web browser containing user state data and session preferences",
+          "A physical memory module inserted into the motherboard",
+          "A programming language used to build databases"
+        ],
+        ans: 1,
+        hint: "Keeps you logged into websites and remembers items in your online shopping cart.",
+        exp: "A <b>Cookie</b> is a small text file placed on a client computer by a website to remember authentication states, settings, and browsing preferences."
+      },
+      {
+        id: 69,
+        topic: "Evolution of Networking: Interspace",
+        q: "In networking history, what was the primary vision behind the concept known as 'Interspace'?",
+        options: [
+          "Launching telecommunication satellites into lunar orbit",
+          "A collaborative software environment allowing users to communicate in 3D multi-sensory virtual spaces",
+          "A military radio system used during World War II",
+          "An underground fiber optic cable linking major continents"
+        ],
+        ans: 1,
+        hint: "Interspace was envisioned as a futuristic vision for networked virtual reality interaction.",
+        exp: "<b>Interspace</b> was envisioned as a multi-user, 3D collaborative environment enabling users to communicate in real-time virtual spaces over interconnected networks."
+      },
+      {
+        id: 70,
+        topic: "Transmission Media: Twisted Pair Types",
+        q: "In UTP and STP cables, what does the abbreviation 'STP' stand for, and what extra element does it feature?",
+        options: [
+          "Simple Twisted Pair without external covering",
+          "Shielded Twisted Pair, featuring metal foil wrapping around wire pairs to block external electromagnetic noise",
+          "Standard Transmission Protocol, featuring fiber filaments",
+          "Solid Telephone Pair, featuring copper shielding exclusively"
+        ],
+        ans: 1,
+        hint: "The protective metal foil shield resists heavy industrial interference.",
+        exp: "<b>Shielded Twisted Pair (STP)</b> features protective metal foil around the wire pairs to guard against extreme electromagnetic interference (EMI)."
+      }
+    ];
+
+    let currentIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let userStatus = new Array(questions.length).fill("unvisited");
+    let eliminatedOptions = {};
+
+    function initQuiz() {
+      currentIndex = 0;
+      userAnswers.fill(null);
+      userStatus.fill("unvisited");
+      eliminatedOptions = {};
+      document.getElementById("quiz-screen").style.display = "block";
+      document.getElementById("analytics-screen").style.display = "none";
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+
+      document.getElementById("top-q-index").innerText = `${currentIndex + 1}/${questions.length}`;
+      document.getElementById("q-number-text").innerText = `QUESTION ${currentIndex + 1} OF ${questions.length}`;
+      document.getElementById("q-topic-text").innerText = `Topic: ${q.topic}`;
+      document.getElementById("question-text").innerHTML = q.q;
+
+      const progress = ((currentIndex + 1) / questions.length) * 100;
+      document.getElementById("progress-fill").style.width = `${progress}%`;
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      const letters = ["A", "B", "C", "D"];
+      const isLocked = userStatus[currentIndex] === "correct" || userStatus[currentIndex] === "wrong";
+      const eliminated = eliminatedOptions[currentIndex] || [];
+
+      q.options.forEach((optText, idx) => {
+        const card = document.createElement("div");
+        card.className = "option-card";
+        card.id = `opt-card-${idx}`;
+
+        if (eliminated.includes(idx)) {
+          card.classList.add("eliminated");
+        }
+
+        if (isLocked) {
+          card.classList.add("locked");
+          if (idx === q.ans) {
+            card.classList.add("correct");
+          } else if (idx === userAnswers[currentIndex]) {
+            card.classList.add("wrong");
+          }
+        } else if (userAnswers[currentIndex] === idx) {
+          card.classList.add("selected");
+        }
+
+        card.onclick = () => selectOption(idx);
+
+        card.innerHTML = `
+          <div class="opt-badge">${letters[idx]}</div>
+          <div class="opt-text">${optText}</div>
+        `;
+        optionsContainer.appendChild(card);
+      });
+
+      const expPanel = document.getElementById("exp-panel");
+      const expTitle = document.getElementById("exp-title");
+      const expContent = document.getElementById("exp-content");
+
+      if (isLocked) {
+        expPanel.classList.add("active");
+        if (userStatus[currentIndex] === "correct") {
+          expTitle.className = "exp-title correct-title";
+          expTitle.innerHTML = "✅ Sahi Jawab! (Correct Answer) • +10 Points";
+        } else {
+          expTitle.className = "exp-title wrong-title";
+          expTitle.innerHTML = `❌ Galat Jawab! (Incorrect) • Correct Option is: <b>${letters[q.ans]}</b>`;
+        }
+        expContent.innerHTML = q.exp;
+      } else if (userStatus[currentIndex] === "skipped") {
+        expPanel.classList.add("active");
+        expTitle.className = "exp-title skipped-title";
+        expTitle.innerHTML = `↷ Question Skipped • Correct Option is: <b>${letters[q.ans]}</b>`;
+        expContent.innerHTML = q.exp;
+      } else {
+        expPanel.classList.remove("active");
+      }
+
+      updatePointsDisplay();
+      document.getElementById("btn-back").disabled = currentIndex === 0;
+      document.getElementById("btn-5050").disabled = isLocked || (eliminated.length > 0);
+
+      const isLast = currentIndex === questions.length - 1;
+      document.getElementById("btn-next").innerText = isLast ? "Finish & Analyze 🏆" : "Next Question →";
+      document.getElementById("btn-lock").disabled = isLocked || userAnswers[currentIndex] === null;
+      document.getElementById("btn-skip").disabled = isLocked;
+    }
+
+    function selectOption(index) {
+      if (userStatus[currentIndex] === "correct" || userStatus[currentIndex] === "wrong") return;
+      const eliminated = eliminatedOptions[currentIndex] || [];
+      if (eliminated.includes(index)) return;
+
+      userAnswers[currentIndex] = index;
+
+      for (let i = 0; i < 4; i++) {
+        const el = document.getElementById(`opt-card-${i}`);
+        if (el) el.classList.remove("selected");
+      }
+      const selectedEl = document.getElementById(`opt-card-${index}`);
+      if (selectedEl) selectedEl.classList.add("selected");
+
+      document.getElementById("btn-lock").disabled = false;
+    }
+
+    function lockAnswer() {
+      const selected = userAnswers[currentIndex];
+      if (selected === null) return;
+
+      const q = questions[currentIndex];
+      if (selected === q.ans) {
+        userStatus[currentIndex] = "correct";
+      } else {
+        userStatus[currentIndex] = "wrong";
+      }
+
+      renderQuestion();
+    }
+
+    function skipQuestion() {
+      if (userStatus[currentIndex] !== "correct" && userStatus[currentIndex] !== "wrong") {
+        userStatus[currentIndex] = "skipped";
+      }
+      renderQuestion();
+    }
+
+    function navigateQuestion(step) {
+      const targetIndex = currentIndex + step;
+
+      if (targetIndex >= questions.length) {
+        showAnalytics();
+        return;
+      }
+
+      if (targetIndex >= 0 && targetIndex < questions.length) {
+        currentIndex = targetIndex;
+        renderQuestion();
+      }
+    }
+
+    function use5050() {
+      const q = questions[currentIndex];
+      if (eliminatedOptions[currentIndex]) return;
+
+      const wrongIndices = [0, 1, 2, 3].filter(idx => idx !== q.ans);
+      wrongIndices.sort(() => Math.random() - 0.5);
+      const toEliminate = wrongIndices.slice(0, 2);
+
+      eliminatedOptions[currentIndex] = toEliminate;
+
+      toEliminate.forEach(idx => {
+        const el = document.getElementById(`opt-card-${idx}`);
+        if (el) {
+          el.classList.add("eliminated");
+          if (userAnswers[currentIndex] === idx) {
+            userAnswers[currentIndex] = null;
+            document.getElementById("btn-lock").disabled = true;
+          }
+        }
+      });
+
+      document.getElementById("btn-5050").disabled = true;
+    }
+
+    function openHintModal() {
+      document.getElementById("hint-modal-text").innerText = questions[currentIndex].hint;
+      document.getElementById("hint-modal").classList.add("active");
+    }
+
+    function closeHintModal() {
+      document.getElementById("hint-modal").classList.remove("active");
+    }
+
+    function updatePointsDisplay() {
+      const correctCount = userStatus.filter(s => s === "correct").length;
+      document.getElementById("top-points").innerText = correctCount * 10;
+    }
+
+    function showAnalytics() {
+      document.getElementById("quiz-screen").style.display = "none";
+      const analyticsScreen = document.getElementById("analytics-screen");
+      analyticsScreen.style.display = "block";
+
+      let correct = 0, wrong = 0, skipped = 0;
+      userStatus.forEach(status => {
+        if (status === "correct") correct++;
+        else if (status === "wrong") wrong++;
+        else skipped++;
+      });
+
+      const total = questions.length;
+      const accuracy = (correct + wrong) > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0;
+
+      document.getElementById("res-score").innerText = `${correct} / ${total}`;
+      document.getElementById("res-correct").innerText = correct;
+      document.getElementById("res-wrong").innerText = wrong;
+      document.getElementById("res-skipped").innerText = skipped;
+      document.getElementById("res-accuracy").innerText = `${accuracy}%`;
+
+      renderReviewGrid("all");
+    }
+
+    function renderReviewGrid(filter = "all") {
+      const container = document.getElementById("review-dots-container");
+      container.innerHTML = "";
+
+      questions.forEach((q, idx) => {
+        const status = userStatus[idx] === "unvisited" ? "skipped" : userStatus[idx];
+
+        if (filter !== "all" && status !== filter) return;
+
+        const dot = document.createElement("div");
+        dot.className = `review-dot ${status}`;
+        dot.innerText = idx + 1;
+        dot.onclick = () => showReviewDetail(idx);
+        container.appendChild(dot);
+      });
+    }
+
+    function filterReview(filterType, btn) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderReviewGrid(filterType);
+    }
+
+    function showReviewDetail(idx) {
+      const q = questions[idx];
+      const detailBox = document.getElementById("review-detail-box");
+      const status = userStatus[idx] === "unvisited" ? "skipped" : userStatus[idx];
+      const letters = ["A", "B", "C", "D"];
+
+      detailBox.style.display = "block";
+      document.getElementById("rev-q-num").innerText = `Question ${idx + 1}: ${q.topic} [${status.toUpperCase()}]`;
+      document.getElementById("rev-q-text").innerHTML = q.q;
+
+      const userAnsText = userAnswers[idx] !== null ? `${letters[userAnswers[idx]]}) ${q.options[userAnswers[idx]]}` : "Not Answered";
+      const correctAnsText = `${letters[q.ans]}) ${q.options[q.ans]}`;
+
+      detailBox.querySelector("#rev-q-details").innerHTML = `
+        <div style="margin-bottom: 6px;"><b>Your Answer:</b> <span style="color: ${status === 'correct' ? 'var(--correct-green)' : 'var(--wrong-red)'}">${userAnsText}</span></div>
+        <div style="margin-bottom: 8px;"><b>Correct Answer:</b> <span style="color: var(--correct-green)">${correctAnsText}</span></div>
+        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; border: 1px solid var(--blue-frame)">
+          <b>Teacher's Explanation:</b> ${q.exp}
+        </div>
+      `;
+    }
+
+    function restartQuiz() {
+      initQuiz();
+    }
+
+    window.onload = initQuiz;
+  </script>
+</body>
+</html>
